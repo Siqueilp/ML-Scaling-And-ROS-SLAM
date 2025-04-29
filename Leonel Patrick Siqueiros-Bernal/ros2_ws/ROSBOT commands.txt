@@ -1,0 +1,76 @@
+Connect to Rosbot 1: ssh husarion@192.168.1.38
+Exit SSH Connection: exit
+
+Connect to Rosbot 2: ssh husarion@192.168.1.27
+Exit SSH Connection: exit
+
+Source ROS2: source /opt/ros/foxy/setup.bash
+	source /opt/ros/humble/setup.bash
+
+Run RPLIDAR: docker compose up -d microros rplidar
+Stop RPLIDAR: docker stop rplidar
+
+Run ROSBOT info (Like TFs): docker compose up -d microros rosbot
+Stop ROSBOT info: docker stop rosbot
+
+Stop all docker containers: docker compose down
+
+Assume manual control: ros2 run teleop_twist_keyboard teleop_twist_keyboard
+	ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r __ns:=/robot1
+	ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r __ns:=/robot2
+
+
+Launching SLAM, Within the ros2_ws directory:
+	source install/local_setup.bash
+	ros2 launch ros2_slam slam.launch.py
+	ros2 launch ros2_slam localization.launch.py
+	ros2 launch ros2_slam explore.launch.py
+
+https://automaticaddison.com/ros-2-navigation-tuning-guide-nav2/
+
+To save map:exit
+e
+	ros2 run nav2_map_server map_saver_cli -f map
+
+
+Resources:
+https://husarion.com/tutorials/ros2-tutorials/8-slam/
+https://github.com/husarion/rosbot-autonomy/
+
+
+docker run --rm -it --privileged husarion/rosbot:humble-0.14.0-20250319 ros2 run rosbot_utils flash_firmware
+
+
+
+
+
+
+New way for slam (On Rosbot):
+	ssh husarion@rosbot2r
+(Only Once): curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/bin
+(Only Once): git clone https://github.com/husarion/rosbot-autonomy.git
+	cd rosbot-autonomy
+(Only Once): sudo just flash-firmware
+	just start-rosbot
+
+
+New way for slam (On Host):
+	sudo just start-pc
+
+
+New way for slam (Robot network connections):
+	Robot1:
+		cd rosbot-autonomy
+		export JOINCODE=fc94:b01d:1803:8dd8:b293:5c7d:7639:932a/R7Tm4Bq8Kk8p2WAdPsGDK5
+		sudo just connect-husarnet $JOINCODE my-laptop
+	Robot2:
+		cd rosbot-autonomy
+		export JOINCODE=fc94:b01d:1803:8dd8:b293:5c7d:7639:932a/RUrEvZ33XFD8E2GdB8A5FJ
+		sudo just connect-husarnet $JOINCODE my-laptop
+
+
+Slam VPN Connection: ssh husarion@robot1
+
+Move ROSbot to a different network:
+	export JOINCODE=<PASTE_YOUR_JOIN_CODE_HERE>
+	sudo husarnet join $JOINCODE robot1
