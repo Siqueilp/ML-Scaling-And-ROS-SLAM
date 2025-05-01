@@ -11,6 +11,7 @@ The following packages and software were installed to develop and run the projec
 
 #### Packages
 - ros-humble-desktop (Patch Release 12 [2025-03-31])
+- ros-humble-slam-toolbox (Version 2.6.10)
 - Oracle Virtualbox (Version 2.6.10)
 
 ## Quick Start Guide
