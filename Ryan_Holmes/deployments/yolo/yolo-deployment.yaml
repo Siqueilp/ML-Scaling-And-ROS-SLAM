@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-deployment
+  namespace: default  # Change this if you want to deploy in a different namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo
+  template:
+    metadata:
+      labels:
+        app: yolo
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/metrics'  # Adjust this if your app serves metrics at a different path
+        prometheus.io/port: '5000'       # Change to the port your app uses for metrics
+    spec:
+      containers:
+      - name: yolo-container
+        image: ryanholmes1/yolo3_cuda:latest
+        ports:
+        - containerPort: 5000  # Change this if your application uses a different port
+      nodeSelector:
+              kubernetes.io/hostname: jetson1
