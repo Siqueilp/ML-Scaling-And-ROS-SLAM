@@ -156,11 +156,6 @@ We followed the guide and configuration files from this GitHub repo:
 
    On the **master node**, download or clone the necessary files:
 
-   ```bash
-   git clone https://github.com/swarnabha13/Team81-Optimizing-Robot-Collaboration.git
-   cd Team81-Optimizing-Robot-Collaboration/prometheus-configs
-   ```
-
 2. **Create the Monitoring Namespace**
 
    ```bash
@@ -184,7 +179,7 @@ We followed the guide and configuration files from this GitHub repo:
    http://<master-ip>:30000
    ```
 
-5. **Optional: Deploy Additional Metrics Exporters**
+5. **Deploy Additional Metrics Exporters**
 
    For enhanced metrics:
 
