@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-service
+  namespace: default  # Change this if you're using a different namespace
+  annotations:
+          metallb.universe.tf/loadBalancerIPs: 192.168.1.245  # Optional: Only include if you're using MetalLB
+spec:
+  type: NodePort
+  ports:
+  - port: 5000  # Port exposed by the service
+    targetPort: 5000  # Port that the container listens on
+    nodePort: 30001  # Optional: specify a specific node port; otherwise, one will be assigned automatically
+  selector:
+    app: yolo
