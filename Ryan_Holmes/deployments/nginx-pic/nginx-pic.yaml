@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-pic
+  namespace: scaling
+  labels:
+    app: nginx-pic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-pic
+  template:
+    metadata:
+      labels:
+        app: nginx-pic
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/metrics'
+        prometheus.io/port: '9113'
+    spec:
+      containers:
+        - name: nginx-pic
+          image: mreecedobson/nginx_picture:v3-release
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 16m
+            limits:
+              memory: 64Mi
+              cpu: 32m
+          ports:
+            - containerPort: 80
+            - containerPort: 9100
+        - name: nginx-exporter
+          image: 'nginx/nginx-prometheus-exporter:0.10.0'
+          # args:
+          #   - '-nginx.scrape-uri=http://localhost:80/metrics'
+          ports:
+            - containerPort: 9113
