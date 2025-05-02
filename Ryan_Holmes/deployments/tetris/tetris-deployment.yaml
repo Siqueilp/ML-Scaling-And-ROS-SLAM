@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tetris-svc
+  namespace: scaling
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.1.245
+  labels:
+    app: tetris
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 1010
+    targetPort: 8000
+  selector:
+    app: tetris
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tetris
+  namespace: scaling
+  labels:
+    app: tetris
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tetris
+  template:
+    metadata:
+      labels:
+        app: tetris
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/metrics'
+        prometheus.io/port: '8000'
+    spec:
+      containers:
+      - name: tetris
+        image: mreecedobson/tetris-battle:v1-release
+        resources:
+          requests:
+            memory: 32Mi
+            cpu: 32m
+          limits:
+            memory: 64Mi
+            cpu: 64m
+        ports:
+        - containerPort: 8000
